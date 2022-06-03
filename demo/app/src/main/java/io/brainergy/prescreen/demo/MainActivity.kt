@@ -18,8 +18,6 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import android.widget.Toast
 import androidx.camera.core.*
-import kotlinx.android.synthetic.main.activity_main.*
-import io.brainergy.prescreen.demo.R
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.math.abs
@@ -33,7 +31,9 @@ class MainActivity : AppCompatActivity(), Prescreen.OnInitializedListener {
     lateinit var resultText: TextView
     lateinit var confidenceText: TextView
     lateinit var faceText: TextView
+    lateinit var previewView: PreviewView
     lateinit var faceDetectionSwitch: Switch
+    lateinit var boundingBoxOverlay: BoundingBoxOverlay
 
     private var preview: Preview? = null
     private var imageCapture: ImageCapture? = null
@@ -63,7 +63,10 @@ class MainActivity : AppCompatActivity(), Prescreen.OnInitializedListener {
         confidenceText = findViewById(R.id.confidenceTextView)
         swapCameraButton = findViewById(R.id.swapCameraButton)
         faceText = findViewById(R.id.faceTextView)
+        previewView = findViewById(R.id.previewView)
         faceDetectionSwitch = findViewById(R.id.faceDetectionSwitch)
+        boundingBoxOverlay = findViewById(R.id.boundingBoxOverlay)
+
         swapCameraButton.setOnClickListener {
             swapCamera()
         }
