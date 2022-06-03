@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), Prescreen.OnInitializedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Prescreen.init(this,"ajMbRHTFPtUo9RzpSAMd", this)
+        Prescreen.init(this,"At5FTeV8eZtUYxgWurro", this)
 
         resultText = findViewById(R.id.resultTextView)
         confidenceText = findViewById(R.id.confidenceTextView)
