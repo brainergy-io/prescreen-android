@@ -49,13 +49,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="8dp" />
 
-        <TextView
-                android:id="@+id/faceTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -69,17 +62,6 @@
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:drawableBottom="@android:drawable/ic_popup_sync"
                 tools:ignore="SpeakableTextPresentCheck" />
-
-        <Switch
-                android:text="Face Detection"
-                android:layout_width="146dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/faceDetectionSwitch"
-                android:layout_weight="1"
-                android:minHeight="48dp"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#80000000"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </LinearLayout>
 

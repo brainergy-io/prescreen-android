@@ -12,7 +12,6 @@ class BoundingBoxOverlay constructor(context: Context?, attributeSet: AttributeS
     View(context, attributeSet) {
 
     private val bboxes: MutableList<Rect> = mutableListOf()
-    private val faceBBoxes : MutableList<Rect> = mutableListOf()
     private var hiBox: Rect? = null
     private var rotationDegree: Int = 0
     private val paint1 = Paint().apply {
@@ -46,30 +45,16 @@ class BoundingBoxOverlay constructor(context: Context?, attributeSet: AttributeS
         if (this.hiBox != null) {
             canvas.drawRect(this.hiBox!!, paint3)
         }
-        faceBBoxes.forEach {
-            if (it.left < width * .025 || it.right > width *.975 || it.top < height * .075 || it.bottom > height*.925) {
-                canvas.drawRect(it, paint2)
-            }  else {
-                canvas.drawRect(it, paint1)
-            }
-//            canvas.drawRect(it, paint3)
-        }
-//        canvas.restore()
 
     }
 
     fun drawBounds(
             bboxes: List<Rect>,
-            faceBBoxes: List<Rect>?,
             highlightedBox: Rect?,
             rotationDegree: Int) {
         this.rotationDegree = rotationDegree
         this.bboxes.clear()
         this.bboxes.addAll(bboxes)
-        this.faceBBoxes.clear()
-        if (faceBBoxes != null){
-            this.faceBBoxes.addAll(faceBBoxes)
-        }
         this.hiBox = highlightedBox
         invalidate()
     }

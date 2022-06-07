@@ -3,14 +3,12 @@ package io.brainergy.prescreen.demo
 import io.brainergy.prescreen.CardImage
 import io.brainergy.prescreen.IDCardResult
 import io.brainergy.prescreen.Prescreen
-import io.brainergy.prescreen.face.FaceDetectionResult
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -30,9 +28,8 @@ class MainActivity : AppCompatActivity(), Prescreen.OnInitializedListener {
     lateinit var swapCameraButton: Button
     lateinit var resultText: TextView
     lateinit var confidenceText: TextView
-    lateinit var faceText: TextView
+    lateinit var Text: TextView
     lateinit var previewView: PreviewView
-    lateinit var faceDetectionSwitch: Switch
     lateinit var boundingBoxOverlay: BoundingBoxOverlay
 
     private var preview: Preview? = null
@@ -62,9 +59,7 @@ class MainActivity : AppCompatActivity(), Prescreen.OnInitializedListener {
         resultText = findViewById(R.id.resultTextView)
         confidenceText = findViewById(R.id.confidenceTextView)
         swapCameraButton = findViewById(R.id.swapCameraButton)
-        faceText = findViewById(R.id.faceTextView)
         previewView = findViewById(R.id.previewView)
-        faceDetectionSwitch = findViewById(R.id.faceDetectionSwitch)
         boundingBoxOverlay = findViewById(R.id.boundingBoxOverlay)
 
         swapCameraButton.setOnClickListener {
@@ -136,16 +131,8 @@ class MainActivity : AppCompatActivity(), Prescreen.OnInitializedListener {
                         imgProxyRotationDegree = imageInfo.rotationDegrees
                         val card = CardImage(this.image!!, imageInfo.rotationDegrees)
                         Prescreen.scanIDCard(card) { result ->
-//                            if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
-                            if (faceDetectionSwitch.isChecked) {
-                                Prescreen.checkFace(result) { faceResult ->
-                                    this@MainActivity.displayResult(result, faceResult)
-                                    imageProxy.close()
-                                }
-                            } else {
-                                this@MainActivity.displayResult(result, null)
-                                imageProxy.close()
-                            }
+                            this@MainActivity.displayResult(result)
+                            imageProxy.close()
                         }
                     }
                 }
@@ -175,13 +162,12 @@ class MainActivity : AppCompatActivity(), Prescreen.OnInitializedListener {
         bindCameraUseCases()
     }
 
-    private fun displayResult(result: IDCardResult, faceResult: FaceDetectionResult?) {
+    private fun displayResult(result: IDCardResult) {
         result.error?.run {
             resultText.text = errorMessage
         }
         boundingBoxOverlay.post{boundingBoxOverlay.clearBounds()}
         val bboxes: MutableList<Rect> = mutableListOf()
-        val faceBBoxes: MutableList<Rect> = mutableListOf()
         var mlBBox: Rect? = null
         result.run {
             // fullImage is always available.
@@ -218,29 +204,8 @@ class MainActivity : AppCompatActivity(), Prescreen.OnInitializedListener {
             if (cardBox != null) {
                 bboxes.add(cardBox!!)
             }
-            if (faceBox != null) {
-                bboxes.add(faceBox!!)
-            }
-            if (faceResult != null && faceResult.error == null) {
-                if (faceResult.selfieFace != null) {
-                    faceBBoxes.add(faceResult.selfieFace!!.bbox)
-                    val rotX = faceResult.selfieFace!!.rot.rotX
-                    val rotY = faceResult.selfieFace!!.rot.rotY
-                    val rotZ = faceResult.selfieFace!!.rot.rotZ
-                    faceText.text =
-                        "Num: ${faceResult.faceScreeningResults!!.size}, Full: ${faceResult.selfieFace!!.isFullFace}, Front: ${faceResult.selfieFace!!.isFrontFacing} (%.1f, %.1f, %.1f)".format(
-                            rotX, rotY, rotZ
-                        )
-                } else {
-                    faceText.text = ""
-                }
-                if (faceResult.cardFace != null) {
-                    faceBBoxes.add(faceResult.cardFace!!.bbox)
-                }
-            }
             boundingBoxOverlay.post{boundingBoxOverlay.drawBounds(
                 bboxes.map{it.transform()},
-                faceBBoxes.map{it.transform()},
                 mlBBox,
                 imgProxyRotationDegree)}
         }
