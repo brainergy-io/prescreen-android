@@ -8,7 +8,7 @@
 - Google Play Services
 - `Internet` and `Camera` Permissions in Manfiest
 
-## Installation Guide
+## Setup Guide
 
 - Add this to your `build.gradle` at the root of the project
 
@@ -25,6 +25,18 @@
 	dependencies {
 		implementation 'com.github.brainergy-io:prescreen-android:<version>'
 	}
+```
+
+- Also make sure to add this script to your `build.gradle` in app module to make sure the SDK run properly
+```
+    android {
+        ...
+
+        aaptOptions {
+            noCompress "model"
+        }
+
+    }
 ```
 
 - Sync your gradle project and PreScreen is now available for your application
